@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# setuptools folders
+/build/
+/dist/
+/pylint_silent.egg-info/
+
+# tox working folder
+/.tox/
