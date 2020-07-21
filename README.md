@@ -1,7 +1,7 @@
 # pylint_silent
 **Automatically add code comments to silence the output of [pylint](https://github.com/PyCQA/pylint).**
 
-`pylint` can be very useful in finding software bugs in python code. A good article demonstrating this is [Why Pylint is both useful and unusable, and how you can actually use it](https://pythonspeed.com/articles/pylint/). In short, when running `pylint` on existing code, it tents to output tons of messages.
+`pylint` can be very useful in finding software bugs in python code. A good article demonstrating this is [Why Pylint is both useful and unusable, and how you can actually use it](https://pythonspeed.com/articles/pylint/). In short, when running `pylint` on existing code, it tends to output tons of messages.
 
 `pylint-silent` is suppose to make `pylint` usable. The idea is to automatically add code comments of the form `# pylint: disable` to silent every `pylint` message. This will allow you to deploy `pylint` in a Continuous Integration (CI) setup. If a code commit introduces **new** `pylint` messages, these will be visible immediately.
 
@@ -26,7 +26,9 @@ For example, if `pylint` produced this message:
 `test.py:35:10: W0613: Unused argument 'name' (unused-argument)`
 
 `pylint-silent` would add this comment:
-`def func(name):  # pylint: disable=unused-argument`
+```
+def func(name):  # pylint: disable=unused-argument
+```
 
 For subsequent runs, you probably want to clear the old comments first:
 ```
@@ -56,10 +58,13 @@ Another issue is that messages that involve multiple files cannot be silenced. I
 * duplicate-code
 
 You could just disable these messages. Personally I think that these are relevant messages. So instead I just modify `pylint` score calculation to something like:
-`evaluation=10.0 + 0.15 - 10 * ((float(5 * error + warning + refactor + convention) / statement) * 10)`
+```
+evaluation=10.0 + 0.15 - 10 * ((float(5 * error + warning + refactor + convention) / statement) * 10)
+```
 The `0.15` artificially raises the score to 10.0 and makes `pylint` return a success code. The factor of `10 *` increases the score sensitivity, which, by default, is way too low even for a medium sized project.
 
 ### Summary
 `pylint`'s moto is: **It's not just a linter that annoys you!**
+
 `pylint-silent` helps `pylint` live up to its moto.
 
