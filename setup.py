@@ -16,7 +16,7 @@ setuptools.setup(
     author="Udi Fuchs",
     author_email="udifuchs@gmail.com",
     license="GPLv2+",
-    url="http://github.com/udifuchs/pylint_silent",
+    url="http://github.com/udifuchs/pylint-silent",
     description="Automatically add code comments to silence the output of pylint",
     long_description=long_description,
     long_description_content_type="text/markdown",

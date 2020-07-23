@@ -1,4 +1,4 @@
-# pylint_silent
+# pylint-silent
 **Automatically add code comments to silence the output of [pylint](https://github.com/PyCQA/pylint).**
 
 `pylint` can be very useful in finding software bugs in python code. A good article demonstrating this is [Why Pylint is both useful and unusable, and how you can actually use it](https://pythonspeed.com/articles/pylint/). In short, when running `pylint` on existing code, it tends to output tons of messages.
@@ -8,7 +8,7 @@
 On top of that, all existing `pylint` messages will show up as comments in the code. When you work on a piece of code and see a `pylint` comment, you can try to fix it.
 
 ### Install
-`pylint-silent` can be installed from [pypi](https://pypi.org/):
+`pylint-silent` can be installed from [pypi](https://pypi.org/project/pylint-silent/)
 ```
 pip install pylint-silent
 ```
@@ -23,7 +23,9 @@ pylint my_package  # This should return a perfect 10.00 score.
 It is assumed that you are using some version control system.**
 
 For example, if `pylint` produced this message:
-`test.py:35:10: W0613: Unused argument 'name' (unused-argument)`
+```
+test.py:35:10: W0613: Unused argument 'name' (unused-argument)
+```
 
 `pylint-silent` would add this comment:
 ```
