@@ -65,8 +65,13 @@ evaluation=10.0 + 0.15 - 10 * ((float(5 * error + warning + refactor + conventio
 ```
 The `0.15` artificially raises the score to 10.0 and makes `pylint` return a success code. The factor of `10 *` increases the score sensitivity, which, by default, is way too low even for a medium sized project.
 
-### Summary
-`pylint`'s moto is: **It's not just a linter that annoys you!**
+### Alternatives
 
-`pylint-silent` helps `pylint` live up to its moto.
+An alternative solution to `pylint` noise is [pylint-ignore](https://pypi.org/project/pylint-ignore/).
+Whichever option you choose, I recommend reading their documentation about how `pylint` should be used.
+
+### Summary
+`pylint`'s motto is: **It's not just a linter that annoys you!**
+
+`pylint-silent` helps `pylint` live up to its motto.
 
