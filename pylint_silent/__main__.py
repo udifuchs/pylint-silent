@@ -3,25 +3,33 @@ import sys
 import pylint_silent
 
 
-def main() -> None:
+def main() -> int:
     """Run pylint_silent based on the command line arguments."""
     if len(sys.argv) < 2:
         print(pylint_silent.__doc__)
-        return
+        return 1
 
     if sys.argv[1] == "apply":
         pylint_logfile = sys.argv[2]
         pylint_silent.apply(pylint_logfile)
-    elif sys.argv[1] == "reset":
+        return 0
+
+    if sys.argv[1] == "reset":
         for py_filename in sys.argv[2:]:
             pylint_silent.reset(py_filename)
-    elif sys.argv[1] == "stats":
+        return 0
+
+    if sys.argv[1] == "stats":
         pylint_silent.statistics(sys.argv[2:])
-    elif sys.argv[1] == "--version":
+        return 0
+
+    if sys.argv[1] == "--version":
         print(f"pylint-silent {pylint_silent.__version__}")
-    else:
-        print(pylint_silent.__doc__)
+        return 0
+
+    print(pylint_silent.__doc__)
+    return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

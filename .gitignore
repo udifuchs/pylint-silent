@@ -10,3 +10,5 @@ __pycache__/
 
 # tox working folder
 /.tox/
+/.coverage
+/htmlcov/
