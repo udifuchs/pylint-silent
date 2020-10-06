@@ -32,12 +32,17 @@ def pyfile_add_comments(py_filename: str, messages: Dict[int, Set[str]]) -> None
         for line_no, line in enumerate(py_file):
             pylint_line_no = line_no + 1
             if pylint_line_no in messages:
+                if "missing-module-docstring" in messages[pylint_line_no]:
+                    first_line = f"# pylint: disable=missing-module-docstring{EOL}"
+                    out_file.write(first_line)
+                    messages[pylint_line_no].remove("missing-module-docstring")
                 # Sort messages alphabetically for reproducible output.
                 sorted_messages = sorted(messages[pylint_line_no])
-                line = (
-                    f"{line.rstrip()}"
-                    f"  # pylint: disable={','.join(sorted_messages)}{EOL}"
-                )
+                if sorted_messages:
+                    line = (
+                        f"{line.rstrip()}"
+                        f"  # pylint: disable={','.join(sorted_messages)}{EOL}"
+                    )
             out_file.write(line)
 
     os.rename(out_filename, py_filename)
@@ -73,6 +78,7 @@ def apply(pylint_logfile: str) -> None:
                 continue
             if code == " C0326":
                 # For C0326 the message symbol is shown on the next line.
+                # In pylint 2.6 bad-whitespace message was removed.
                 message_symbol = "bad-whitespace"
             else:
                 if message.find("(") < 0:
@@ -107,6 +113,8 @@ def reset(py_filename: str) -> None:
          open(out_filename, "w") as out_file:
 
         for line in py_file:
+            if line.rstrip() == "# pylint: disable=missing-module-docstring":
+                continue
             comment_pos = line.find("# pylint: disable=")
             # Do not remove comments starting at beginning of line
             if comment_pos > 0:

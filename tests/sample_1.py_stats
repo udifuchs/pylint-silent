@@ -1,4 +1,3 @@
-bad-whitespace: 1
 broad-except: 1
 eval-used: 1
 exec-used: 1
@@ -8,4 +7,4 @@ missing-module-docstring: 1
 unused-argument: 1
 unused-import: 2
 unused-variable: 1
-TOTAL: 11
+TOTAL: 10

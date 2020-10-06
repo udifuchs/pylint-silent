@@ -2,6 +2,7 @@
 import os
 import shutil
 import filecmp
+import multiprocessing
 from contextlib import redirect_stdout
 import unittest.mock
 import runpy
@@ -40,14 +41,20 @@ class Context:  # pylint: disable=too-few-public-methods
         self.temp_sample_after_apply = os.path.join(tmpdir, sample_apply_basename)
         shutil.copy(self.sample_after_apply, self.temp_sample_after_apply)
 
-    def run_pylint(self, out_file: str) -> float:
+    def run_pylint(self, *args: str) -> Optional[int]:
         """Run pylint on our python test files."""
+        pylint_opts = ((self.temp_sample_filename,
+                        self.temp_sample_after_apply) + args,)
+        proc = multiprocessing.Process(target=pylint.lint.Run, args=pylint_opts)
+        proc.start()
+        proc.join()
+        return proc.exitcode
+
+    def run_pylint_to_file(self, out_file: str) -> Optional[int]:
+        """Run pylint on our python test files redirecting stdout to file."""
         with open(out_file, "w") as out, \
              redirect_stdout(out):
-            pylint_opts = [self.temp_sample_filename, self.temp_sample_after_apply]
-            results = pylint.lint.Run(pylint_opts, exit=False)
-            score: float = results.linter.stats["global_note"]
-            return score
+            return self.run_pylint()
 
 
 # Ignore type checking until release of:
@@ -80,7 +87,7 @@ def test_apply(ctx: Context) -> None:
     """Test 'pylint-silent apply'."""
     # Run pylint on test files.
     pylint_output = ctx.temp_sample_filename + "lint"
-    ctx.run_pylint(pylint_output)
+    ctx.run_pylint_to_file(pylint_output)
 
     # Apply pylint-silent changed based on output from pylint.
     run_pylint_silent("apply", pylint_output)
@@ -90,10 +97,8 @@ def test_apply(ctx: Context) -> None:
         f"diff {ctx.temp_sample_filename} {ctx.sample_after_apply}"
 
     # Test that pylint is indeed silent now.
-    pylint_after_apply = ctx.temp_sample_filename + "lint_after_apply"
-    score = ctx.run_pylint(pylint_after_apply)
-    # The score is not a pefect 10, because we still have a 'duplicate-code'.
-    assert 9.44 < score < 9.45
+    exitcode = ctx.run_pylint("--disable=duplicate-code")
+    assert exitcode == 0
 
 
 def test_stats(ctx: Context) -> None:
