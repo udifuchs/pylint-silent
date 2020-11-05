@@ -57,9 +57,7 @@ class Context:  # pylint: disable=too-few-public-methods
             return self.run_pylint()
 
 
-# Ignore type checking until release of:
-# https://github.com/python/mypy/pull/9232
-@pytest.fixture(name="ctx")  # type: ignore[misc]
+@pytest.fixture(name="ctx")
 def fixture_ctx(tmpdir: str) -> Context:
     """Create context fixure for running tests."""
     return Context(tmpdir)
