@@ -56,6 +56,7 @@ FAVICON = base64.decodestring(  # pylint: disable=deprecated-method
 ```
 
 Another issue is that messages that involve multiple files cannot be silenced. I'm aware of two such messages:
+
 *  cyclic-import
 * duplicate-code
 
@@ -64,6 +65,15 @@ You could just disable these messages. Personally I think that these are relevan
 evaluation=10.0 + 0.15 - 10 * ((float(5 * error + warning + refactor + convention) / statement) * 10)
 ```
 The `0.15` artificially raises the score to 10.0 and makes `pylint` return a success code. The factor of `10 *` increases the score sensitivity, which, by default, is way too low even for a medium sized project.
+
+`pylint` also lets you disable a checks on a block of code:
+```
+# pylint: disable=unused-import                                                         
+import time
+import sys                                                                             
+# pylint: enable=unused-import 
+```
+`pylint-silent` would ignore these blocks. `pylint-silent reset` would not clear these messages and `pylint-silent stats` would not count them.
 
 ### Alternatives
 

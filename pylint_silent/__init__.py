@@ -115,9 +115,10 @@ def reset(py_filename: str) -> None:
         for line in py_file:
             if line.rstrip() == "# pylint: disable=missing-module-docstring":
                 continue
-            comment_pos = line.find("# pylint: disable=")
+            comment_pos = line.lstrip().find("# pylint: disable=")
             # Do not remove comments starting at beginning of line
             if comment_pos > 0:
+                comment_pos = line.find("# pylint: disable=")
                 line = line[:comment_pos].rstrip() + EOL
                 something_changed = True
             out_file.write(line)
@@ -137,9 +138,12 @@ def statistics(py_filenames: List[str]) -> None:
         with open(py_filename, "r") as py_file:
 
             for line in py_file:
-                comment_pos = line.find("# pylint: disable=")
+                comment_pos = line.lstrip().find("# pylint: disable=")
                 # Ignore comments starting at beginning of line
-                if comment_pos >= 0:
+                if (
+                    comment_pos > 0
+                    or line.rstrip() == "# pylint: disable=missing-module-docstring"
+                ):
                     comment = line[comment_pos:].rstrip()
                     # 'comment' may disable sevral messages:
                     # "# pylint: disable=too-many-branches,too-many-statements"
