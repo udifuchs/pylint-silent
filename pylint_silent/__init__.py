@@ -13,6 +13,7 @@ WARNING: Python files are modified in place.
          It is assumed that you are using some version control system.
 """
 import os
+import shutil
 from typing import Dict, List, Set
 # from pylint_silent.version import __version__
 import pylint_silent.version
@@ -45,6 +46,7 @@ def pyfile_add_comments(py_filename: str, messages: Dict[int, Set[str]]) -> None
                     )
             out_file.write(line)
 
+    shutil.copymode(py_filename, out_filename)
     os.rename(out_filename, py_filename)
 
 
