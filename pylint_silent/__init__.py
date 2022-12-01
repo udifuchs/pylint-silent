@@ -15,9 +15,8 @@ WARNING: Python files are modified in place.
 import os
 import shutil
 from typing import Dict, List, Set
-# from pylint_silent.version import __version__
-import pylint_silent.version
-__version__ = pylint_silent.version.__version__
+
+VERSION = "1.1.2"
 
 EOL = "\n"
 TEMP_FILE_ENDING = ".created_by_pylint_silent"
@@ -27,8 +26,8 @@ def pyfile_add_comments(py_filename: str, messages: Dict[int, Set[str]]) -> None
     """Add comments to a python file to silent 'messages'."""
     out_filename = py_filename + TEMP_FILE_ENDING
 
-    with open(py_filename, "r") as py_file, \
-         open(out_filename, "w") as out_file:
+    with open(py_filename, "r", encoding="utf-8") as py_file, \
+         open(out_filename, "w", encoding="utf-8") as out_file:
 
         for line_no, line in enumerate(py_file):
             pylint_line_no = line_no + 1
@@ -55,7 +54,7 @@ def apply(pylint_logfile: str) -> None:
     active_py_filename = None
     messages: Dict[int, Set[str]] = {}
 
-    with open(pylint_logfile, "r") as logfile:
+    with open(pylint_logfile, "r", encoding="utf-8") as logfile:
 
         for line in logfile:
             # 'line' should look like this:
@@ -111,8 +110,8 @@ def reset(py_filename: str) -> None:
     out_filename = py_filename + TEMP_FILE_ENDING
     something_changed = False
 
-    with open(py_filename, "r") as py_file, \
-         open(out_filename, "w") as out_file:
+    with open(py_filename, "r", encoding="utf-8") as py_file, \
+         open(out_filename, "w", encoding="utf-8") as out_file:
 
         for line in py_file:
             if line.rstrip() == "# pylint: disable=missing-module-docstring":
@@ -137,7 +136,7 @@ def statistics(py_filenames: List[str]) -> None:
 
     for py_filename in py_filenames:
 
-        with open(py_filename, "r") as py_file:
+        with open(py_filename, "r", encoding="utf-8") as py_file:
 
             for line in py_file:
                 comment_pos = line.lstrip().find("# pylint: disable=")
@@ -149,7 +148,7 @@ def statistics(py_filenames: List[str]) -> None:
                     comment = line[comment_pos:].rstrip()
                     # 'comment' may disable sevral messages:
                     # "# pylint: disable=too-many-branches,too-many-statements"
-                    messages = comment[comment.find("=") + 1:].split(",")
+                    messages = comment[comment.rfind("=") + 1:].split(",")
                     for message in messages:
                         if message in stats:
                             stats[message] += 1

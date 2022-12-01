@@ -8,7 +8,7 @@
 On top of that, all existing `pylint` messages will show up as comments in the code. When you work on a piece of code and see a `pylint` comment, you can try to fix it.
 
 ### Install
-`pylint-silent` can be installed from [pypi](https://pypi.org/project/pylint-silent/)
+`pylint-silent` can be installed from [pypi](https://pypi.org/project/pylint-silent/):
 ```
 pip install pylint-silent
 ```
@@ -40,8 +40,15 @@ pylint-silent apply pylint.log
 ```
 
 There are two reasons to clear old comments:
+
 1. Remove stale comments to code that was already fixed.
 2. `pylint-silent` does not know how to handle lines that already have a `# pylint` comment in them.
+
+To reset or show statistics on all python files in a folder you might want to use the `find` command:
+```
+find my_package -name "*.py" -exec pylint-silent stats {} +
+find my_package -name "*.py" -exec pylint-silent reset {} +
+```
 
 ### Known limitations
 In some cases `pylint-silent` may break your code:
@@ -49,7 +56,7 @@ In some cases `pylint-silent` may break your code:
 FAVICON = base64.decodestring("""  # pylint: disable=deprecated-method
 ...
 ```
-Luckily, you can now use `pylint` to detect such cases. In this case `pylint` would ignore the comment because it is part of the string. Therefore, the warning message would still show up. This code has to be fixed manually:
+Luckily, you can simply run `pylint` a second time to detect such cases. In this case `pylint` would ignore the comment because it is part of the string. Therefore, the warning message would still show up. This code has to be fixed manually:
 ```
 FAVICON = base64.decodestring(  # pylint: disable=deprecated-method
 """...
@@ -68,10 +75,10 @@ The `0.15` artificially raises the score to 10.0 and makes `pylint` return a suc
 
 `pylint` also lets you disable a checks on a block of code:
 ```
-# pylint: disable=unused-import                                                         
+# pylint: disable=unused-import
 import time
-import sys                                                                             
-# pylint: enable=unused-import 
+import sys
+# pylint: enable=unused-import
 ```
 `pylint-silent` would ignore these blocks. `pylint-silent reset` would not clear these messages and `pylint-silent stats` would not count them.
 

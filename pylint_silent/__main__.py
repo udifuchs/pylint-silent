@@ -24,7 +24,7 @@ def main() -> int:
         return 0
 
     if sys.argv[1] == "--version":
-        print(f"pylint-silent {pylint_silent.__version__}")
+        print(f"pylint-silent {pylint_silent.VERSION}")
         return 0
 
     print(pylint_silent.__doc__)

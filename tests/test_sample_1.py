@@ -6,12 +6,12 @@ import multiprocessing
 from contextlib import redirect_stdout
 import unittest.mock
 import runpy
-from typing import Optional
+from typing import Optional, Union
 import pytest
 import pylint.lint
 
 
-def run_pylint_silent(*args: str) -> Optional[int]:
+def run_pylint_silent(*args: str) -> Union[int, str, None]:
     """Run pylint-silent as if it was an executable."""
     with unittest.mock.patch("sys.argv", ["", *args]):
         try:
@@ -52,7 +52,7 @@ class Context:  # pylint: disable=too-few-public-methods
 
     def run_pylint_to_file(self, out_file: str) -> Optional[int]:
         """Run pylint on our python test files redirecting stdout to file."""
-        with open(out_file, "w") as out, \
+        with open(out_file, "w", encoding="utf-8") as out, \
              redirect_stdout(out):
             return self.run_pylint()
 
@@ -102,7 +102,7 @@ def test_apply(ctx: Context) -> None:
 def test_stats(ctx: Context) -> None:
     """Test that 'pylint-silent stats' have not changed."""
     sample_stats = ctx.temp_sample_filename + "_stats"
-    with redirect_stdout(open(sample_stats, "w")):
+    with redirect_stdout(open(sample_stats, "w", encoding="utf-8")):
         run_pylint_silent("stats", ctx.sample_after_apply)
 
     assert filecmp.cmp(sample_stats, ctx.sample_filename + "_stats"), \
