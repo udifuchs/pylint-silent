@@ -120,7 +120,14 @@ def reset(py_filename: str) -> None:
             # Do not remove comments starting at beginning of line
             if comment_pos > 0:
                 comment_pos = line.find("# pylint: disable=")
-                line = line[:comment_pos].rstrip() + EOL
+                stripped_line = line[:comment_pos].rstrip()
+
+                # Other tooling comments may follow pylint comments
+                # Make sure to add *back* that comment before proceeding
+                other_comment_pos = line.find('#', comment_pos + 1)
+                if other_comment_pos > 0:
+                    stripped_line += '  ' + line[other_comment_pos:].rstrip()
+                line = stripped_line + EOL
                 something_changed = True
             out_file.write(line)
 
@@ -145,8 +152,14 @@ def statistics(py_filenames: List[str]) -> None:
                     comment_pos > 0
                     or line.rstrip() == "# pylint: disable=missing-module-docstring"
                 ):
-                    comment = line[comment_pos:].rstrip()
-                    # 'comment' may disable sevral messages:
+                    comment = line.lstrip()[comment_pos:].rstrip()
+
+                    # Other tooling comments may follow pylint comments
+                    other_comment_pos = comment.find('#', 1)
+                    if other_comment_pos > 0:
+                        comment = comment[:other_comment_pos].rstrip()
+
+                    # 'comment' may disable several messages:
                     # "# pylint: disable=too-many-branches,too-many-statements"
                     messages = comment[comment.rfind("=") + 1:].split(",")
                     for message in messages:
