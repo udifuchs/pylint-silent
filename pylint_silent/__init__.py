@@ -16,7 +16,7 @@ import os
 import shutil
 from typing import Dict, List, Set
 
-VERSION = "1.1.2"
+VERSION = "1.2.0"
 
 EOL = "\n"
 TEMP_FILE_ENDING = ".created_by_pylint_silent"
