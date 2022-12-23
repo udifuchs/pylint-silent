@@ -27,15 +27,22 @@ class Context:  # pylint: disable=too-few-public-methods
     def __init__(self, tmpdir: str) -> None:
         self.sample_filename = "tests/sample_1.py"
         self.sample_after_apply = "tests/sample_1_after_apply.py"
+        self.sample2_filename = "tests/sample_2.py"
+        self.sample2_after_reset = "tests/sample_2_after_reset.py"
 
-        # Check that input test files exsist.
+        # Check that input test files exist.
         assert os.path.isfile(self.sample_filename)
         assert os.path.isfile(self.sample_after_apply)
+        assert os.path.isfile(self.sample2_filename)
+        assert os.path.isfile(self.sample2_after_reset)
 
         # Copy test files to temp folder
         sample_basename = os.path.basename(self.sample_filename)
+        sample2_basename = os.path.basename(self.sample2_filename)
         self.temp_sample_filename = os.path.join(tmpdir, sample_basename)
         shutil.copy(self.sample_filename, self.temp_sample_filename)
+        self.temp_sample2_filename = os.path.join(tmpdir, sample2_basename)
+        shutil.copy(self.sample2_filename, self.temp_sample2_filename)
 
         sample_apply_basename = os.path.basename(self.sample_after_apply)
         self.temp_sample_after_apply = os.path.join(tmpdir, sample_apply_basename)
@@ -118,8 +125,19 @@ def test_reset(ctx: Context) -> None:
     assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
         f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
 
-    # Test reseting a clean file.
+    # Test resetting a clean file.
     run_pylint_silent("reset", ctx.temp_sample_after_apply)
 
     assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
         f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
+
+
+def test_reset_sample2(ctx: Context) -> None:
+    """Test 'pylint-silent reset' of the second sample file.
+
+    Remove all pylint comments and test that we preserve other comments
+    """
+    run_pylint_silent("reset", ctx.temp_sample2_filename)
+
+    assert filecmp.cmp(ctx.sample2_after_reset, ctx.temp_sample2_filename), \
+        f"diff {ctx.sample2_after_reset} {ctx.temp_sample2_filename}"

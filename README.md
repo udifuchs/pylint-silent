@@ -64,7 +64,7 @@ FAVICON = base64.decodestring(  # pylint: disable=deprecated-method
 
 Another issue is that messages that involve multiple files cannot be silenced. I'm aware of two such messages:
 
-*  cyclic-import
+* cyclic-import
 * duplicate-code
 
 You could just disable these messages. Personally I think that these are relevant messages. So instead I just modify `pylint` score calculation to something like:
