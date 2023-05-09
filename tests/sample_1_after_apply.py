@@ -12,7 +12,7 @@ def func(name):  # pylint: disable=missing-function-docstring,unused-argument
         exec("1 + 1")
         # pylint: enable=exec-used
         val = eval("2 + 2")  # pylint: disable=eval-used,unused-variable
-    except BaseException:  # pylint: disable=broad-except
+    except BaseException:  # pylint: disable=broad-exception-caught
         pass
 
     global VAR  # pylint: disable=global-variable-not-assigned
