@@ -79,13 +79,13 @@ def test_version_option() -> None:
 def test_no_params() -> None:
     """Test exit error with no parameters."""
     status = run_pylint_silent()
-    assert status == 1
+    assert status == 2
 
 
 def test_bad_params() -> None:
     """Test exit error with bad parameters."""
     status = run_pylint_silent("bad-param")
-    assert status == 1
+    assert status == 2
 
 
 def test_apply(ctx: Context) -> None:

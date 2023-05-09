@@ -1,33 +1,39 @@
 """Main entry point for pylint-silent."""
 import sys
+import argparse
 import pylint_silent
 
 
 def main() -> int:
     """Run pylint_silent based on the command line arguments."""
-    if len(sys.argv) < 2:
-        print(pylint_silent.__doc__)
-        return 1
+    parser = argparse.ArgumentParser(
+        prog="pylint-silent",
+        description=pylint_silent.__doc__,
+        epilog=pylint_silent.EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        allow_abbrev=False,
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"pylint-silent {pylint_silent.VERSION}"
+    )
+    parser.add_argument("command", choices=["apply", "reset", "stats"])
+    parser.add_argument("filename", nargs="+")
+    args = parser.parse_args()
 
-    if sys.argv[1] == "apply":
-        pylint_logfile = sys.argv[2]
+    if args.command == "apply":
+        pylint_logfile = args.filename[0]
         pylint_silent.apply(pylint_logfile)
         return 0
 
-    if sys.argv[1] == "reset":
-        for py_filename in sys.argv[2:]:
+    if args.command == "reset":
+        for py_filename in args.filename:
             pylint_silent.reset(py_filename)
         return 0
 
-    if sys.argv[1] == "stats":
-        pylint_silent.statistics(sys.argv[2:])
+    if args.command == "stats":
+        pylint_silent.statistics(args.filename)
         return 0
 
-    if sys.argv[1] == "--version":
-        print(f"pylint-silent {pylint_silent.VERSION}")
-        return 0
-
-    print(pylint_silent.__doc__)
     return 1
 
 

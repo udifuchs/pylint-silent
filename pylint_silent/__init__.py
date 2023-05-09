@@ -1,22 +1,23 @@
-"""Add "# pylint: disable" comments to silence the output of pylint.
-
-Usage: pylint-silent apply <pylint-output-file>
-            Add pylint comments based on the output of pylint.
-       pylint-silent reset <python-file> ...
-            Remove pylint comments from specified python files.
-       pylint-silent stats <python-file> ...
-            Report statistics on number of pylint comments in specified files.
-       pylint-silent --version
-            Show the version and exit.
-
-WARNING: Python files are modified in place.
-         It is assumed that you are using some version control system.
-"""
+"""Add "# pylint: disable" comments to silence the output of pylint."""
 import os
 import shutil
 from typing import Dict, List, Set
 
 VERSION = "1.2.0"
+
+EPILOG = """
+Commands:
+  apply <pylint-output-file>
+      Add pylint comments based on the output of pylint.
+  reset <python-file> ...
+      Remove pylint comments from specified python files.
+  stats <python-file> ...
+      Report statistics on number of pylint comments in specified files.
+
+WARNING:
+  Python files are modified in place.
+  It is assumed that you are using some version control system.
+"""
 
 EOL = "\n"
 TEMP_FILE_ENDING = ".created_by_pylint_silent"
