@@ -66,7 +66,7 @@ class Context:  # pylint: disable=too-few-public-methods
 
 @pytest.fixture(name="ctx")
 def fixture_ctx(tmpdir: str) -> Context:
-    """Create context fixure for running tests."""
+    """Create context fixture for running tests."""
     return Context(tmpdir)
 
 

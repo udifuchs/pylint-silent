@@ -5,7 +5,7 @@ import sys
 import time
 # pylint: enable=unused-import
 
-import a_module_unknown_to_pylint  # pylint: disable=import-error # pants: no-infer-dep
+import a_module_unknown_to_pylint  # pylint: disable=import-error; silent # pants: no-infer-dep
 
 
 def func(name):
@@ -17,9 +17,9 @@ def func(name):
     except BaseException:
         pass
 
-    foo: int = 'foo'  # pylint: disable=unused-variable,disallowed-name # noqa
-    bar: int = 'bar'  # noqa # pylint: disable=unused-variable,disallowed-name
+    foo: int = 'foo'  # pylint: disable=unused-variable,disallowed-name; silent # noqa
+    bar: int = 'bar'  # noqa # pylint: disable=unused-variable,disallowed-name; silent
 
-    10 / 0  # pylint: disable=pointless-statement # Dividing by zero is fun
+    10 / 0  # pylint: disable=pointless-statement; silent # Dividing by zero is fun
 
     global VAR
