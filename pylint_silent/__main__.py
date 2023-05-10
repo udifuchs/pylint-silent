@@ -19,7 +19,7 @@ def main() -> int:
     )
     parser.add_argument("command", choices=["apply", "reset", "stats"])
     parser.add_argument("filename", nargs="+")
-    parser.add_argument("signature", default=False, action='store_true')
+    parser.add_argument("--signature", default=False, action='store_true')
     args = parser.parse_args()
 
     signature = SIGNATURE if args.signature else ''
