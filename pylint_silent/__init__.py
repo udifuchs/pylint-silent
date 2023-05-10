@@ -99,7 +99,7 @@ def apply(pylint_logfile: str, signature) -> None:
                 messages[line_no].add(message_symbol)
             else:
                 # First message for this line_no
-                messages[line_no] = set([message_symbol])
+                messages[line_no] = {message_symbol}
 
         # Handle last file.
         if active_py_filename is not None:
