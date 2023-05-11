@@ -31,7 +31,7 @@ def main() -> int:
 
     if args.command == "reset":
         for py_filename in args.filename:
-            pylint_silent.reset(py_filename, signature, used_signature=args.signature)
+            pylint_silent.reset(py_filename, signature)
         return 0
 
     if args.command == "stats":
