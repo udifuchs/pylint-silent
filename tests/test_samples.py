@@ -158,6 +158,7 @@ def test_stats(ctx: Context) -> None:
     assert filecmp.cmp(sample_stats_3, ctx.sample_filename + "_mixed_stats"), \
         f"diff {sample_stats_3} {ctx.sample_filename + '_mixed_stats'}"
 
+
 def test_reset(ctx: Context) -> None:
     """Test 'pylint-silent reset'.
     Remove all generated comments and test that we are back to the original code.
