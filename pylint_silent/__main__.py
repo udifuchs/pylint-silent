@@ -5,6 +5,7 @@ import pylint_silent
 
 SIGNATURE = "; silent"
 
+
 def main() -> int:
     """Run pylint_silent based on the command line arguments."""
     parser = argparse.ArgumentParser(
