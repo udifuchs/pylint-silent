@@ -1,6 +1,7 @@
-# pylint: disable=missing-module-docstring; silent
-import os  # pylint: disable=unused-import; silent
-import sys  # pylint: disable=unused-import; silent
+#!/usr/bin/python3
+# pylint: disable=missing-module-docstring
+import os  # pylint: disable=unused-import
+import sys  # pylint: disable=unused-import
 # pylint: disable=unused-import
 import time
 # pylint: enable=unused-import
@@ -15,4 +16,4 @@ def func(name):  # pylint: disable=missing-function-docstring,unused-argument; s
     except BaseException:  # pylint: disable=broad-exception-caught; silent
         pass
 
-    global VAR  # pylint: disable=global-variable-not-assigned; silent
+    global VAR  # pylint: disable=global-variable-not-assigned

@@ -1,9 +1,11 @@
 broad-exception-caught: 1
 eval-used: 1
 global-variable-not-assigned: 1
+invalid-name: 1
 missing-function-docstring: 1
 missing-module-docstring: 1
+too-many-lines: 1
 unused-argument: 1
 unused-import: 2
 unused-variable: 1
-TOTAL: 9
+TOTAL: 11

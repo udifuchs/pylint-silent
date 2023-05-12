@@ -26,10 +26,10 @@ class Context:
     """Create context for running tests.
     This includes a temporary folder and pointers to all related file names."""
     def __init__(self, tmpdir: str) -> None:
-        self.sample_filename = "tests/sample_1.py"
-        self.sample_after_apply = "tests/sample_1_after_apply.py"
-        self.sample_after_apply_mixed = "tests/sample_1_after_apply_mixed.py"
-        self.sample_after_apply_w_sig = "tests/sample_1_after_apply_w_signature.py"
+        self.sample_filename = "tests/sAmple_1.py"
+        self.sample_after_apply = "tests/sAmple_1_after_apply.py"
+        self.sample_after_apply_mixed = "tests/sAmple_1_after_apply_mixed.py"
+        self.sample_after_apply_w_sig = "tests/sAmple_1_after_apply_w_signature.py"
         self.sample2_filename = "tests/sample_2.py"
         self.sample2_after_reset = "tests/sample_2_after_reset.py"
 
@@ -75,7 +75,7 @@ class Context:
         """Run pylint on our python test files redirecting stdout to file."""
         with open(out_file, "w", encoding="utf-8") as out, \
              redirect_stdout(out):
-            return self.run_pylint()
+            return self.run_pylint("--max-module-lines=10")
 
 
 @pytest.fixture(name="ctx")
@@ -109,7 +109,7 @@ def test_apply(ctx: Context) -> None:
     ctx.run_pylint_to_file(pylint_output)
 
     # Apply pylint-silent changed based on output from pylint.
-    run_pylint_silent("apply", pylint_output)
+    run_pylint_silent("apply", "--max-line-length=70", pylint_output)
 
     # Test that the expected python file was generated.
     assert filecmp.cmp(ctx.temp_sample_filename, ctx.sample_after_apply), \
@@ -163,6 +163,13 @@ def test_stats(ctx: Context) -> None:
     assert filecmp.cmp(sample_stats_3, ctx.sample_filename + "_mixed_stats"), \
         f"diff {sample_stats_3} {ctx.sample_filename + '_mixed_stats'}"
 
+    sample_stats_4 = ctx.temp_sample2_filename + "_stats_4"
+    with redirect_stdout(open(sample_stats_4, "w", encoding="utf-8")):
+        run_pylint_silent("stats", ctx.sample2_filename)
+
+    assert filecmp.cmp(sample_stats_4, ctx.sample2_filename + "_stats"), \
+        f"diff {sample_stats_4} {ctx.sample2_filename + '_stats'}"
+
 
 def test_reset(ctx: Context) -> None:
     """Test 'pylint-silent reset'.
@@ -171,7 +178,7 @@ def test_reset(ctx: Context) -> None:
     run_pylint_silent("reset", ctx.temp_sample_after_apply)
 
     assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
-        f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
+        f"diff {ctx.temp_sample_after_apply} {ctx.sample_filename}"
 
     # Test resetting a clean file.
     run_pylint_silent("reset", ctx.temp_sample_after_apply)

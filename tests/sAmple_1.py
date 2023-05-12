@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# Test code that triggers some pylint messages that need to be disabled.
 import os
 import sys
 # pylint: disable=unused-import

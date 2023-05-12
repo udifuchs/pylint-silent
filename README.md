@@ -32,6 +32,16 @@ test.py:35:10: W0613: Unused argument 'name' (unused-argument)
 def func(name):  # pylint: disable=unused-argument
 ```
 
+If adding the comment would make the line too long, `pylint-silent` would instead add:
+```
+# pylint-next: disable=unused-argument
+def very-long-function-name-with-some-arguments(first_argument, second_argument):
+```
+`--max-line-length` specfies the maximum line length.
+This feature is disabled by default for compatibility with previous versions.
+It is disabled by having a default maximum line length of 999.
+In the future the default should change to 88.
+
 Another option is to run `pylint-silent --signature` to add a signature to each generated comment:
 ```
 def func(name):  # pylint: disable=unused-argument; silent

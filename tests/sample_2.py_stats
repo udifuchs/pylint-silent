@@ -1,0 +1,5 @@
+disallowed-name: 2
+import-error: 1
+pointless-statement: 1
+unused-variable: 2
+TOTAL: 6
