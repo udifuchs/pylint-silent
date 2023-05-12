@@ -3,6 +3,8 @@ import sys
 import argparse
 import pylint_silent
 
+SIGNATURE = "; silent"
+
 
 def main() -> int:
     """Run pylint_silent based on the command line arguments."""
@@ -18,20 +20,22 @@ def main() -> int:
     )
     parser.add_argument("command", choices=["apply", "reset", "stats"])
     parser.add_argument("filename", nargs="+")
+    parser.add_argument("--signature", default=False, action='store_true')
     args = parser.parse_args()
 
+    signature = SIGNATURE if args.signature else ''
     if args.command == "apply":
         pylint_logfile = args.filename[0]
-        pylint_silent.apply(pylint_logfile)
+        pylint_silent.apply(pylint_logfile, signature)
         return 0
 
     if args.command == "reset":
         for py_filename in args.filename:
-            pylint_silent.reset(py_filename)
+            pylint_silent.reset(py_filename, signature)
         return 0
 
     if args.command == "stats":
-        pylint_silent.statistics(args.filename)
+        pylint_silent.statistics(args.filename, signature)
         return 0
 
     return 1

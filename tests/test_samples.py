@@ -21,18 +21,23 @@ def run_pylint_silent(*args: str) -> Union[int, str, None]:
         return None
 
 
-class Context:  # pylint: disable=too-few-public-methods
+# pylint: disable-next=too-few-public-methods,too-many-instance-attributes; silent
+class Context:
     """Create context for running tests.
     This includes a temporary folder and pointers to all related file names."""
     def __init__(self, tmpdir: str) -> None:
         self.sample_filename = "tests/sample_1.py"
         self.sample_after_apply = "tests/sample_1_after_apply.py"
+        self.sample_after_apply_mixed = "tests/sample_1_after_apply_mixed.py"
+        self.sample_after_apply_w_sig = "tests/sample_1_after_apply_w_signature.py"
         self.sample2_filename = "tests/sample_2.py"
         self.sample2_after_reset = "tests/sample_2_after_reset.py"
 
         # Check that input test files exist.
         assert os.path.isfile(self.sample_filename)
         assert os.path.isfile(self.sample_after_apply)
+        assert os.path.isfile(self.sample_after_apply_mixed)
+        assert os.path.isfile(self.sample_after_apply_w_sig)
         assert os.path.isfile(self.sample2_filename)
         assert os.path.isfile(self.sample2_after_reset)
 
@@ -42,11 +47,20 @@ class Context:  # pylint: disable=too-few-public-methods
         self.temp_sample_filename = os.path.join(tmpdir, sample_basename)
         shutil.copy(self.sample_filename, self.temp_sample_filename)
         self.temp_sample2_filename = os.path.join(tmpdir, sample2_basename)
+        self.temp_sample2_again_filename = os.path.join(
+            tmpdir, f"again_{sample2_basename}"
+        )
         shutil.copy(self.sample2_filename, self.temp_sample2_filename)
+        shutil.copy(self.sample2_filename, self.temp_sample2_again_filename)
 
         sample_apply_basename = os.path.basename(self.sample_after_apply)
+        sample_apply_w_sig_basename = os.path.basename(self.sample_after_apply_w_sig)
         self.temp_sample_after_apply = os.path.join(tmpdir, sample_apply_basename)
+        self.temp_sample_after_apply_w_sig = os.path.join(
+            tmpdir, sample_apply_w_sig_basename
+        )
         shutil.copy(self.sample_after_apply, self.temp_sample_after_apply)
+        shutil.copy(self.sample_after_apply_w_sig, self.temp_sample_after_apply_w_sig)
 
     def run_pylint(self, *args: str) -> Optional[int]:
         """Run pylint on our python test files."""
@@ -66,7 +80,7 @@ class Context:  # pylint: disable=too-few-public-methods
 
 @pytest.fixture(name="ctx")
 def fixture_ctx(tmpdir: str) -> Context:
-    """Create context fixure for running tests."""
+    """Create context fixture for running tests."""
     return Context(tmpdir)
 
 
@@ -106,14 +120,48 @@ def test_apply(ctx: Context) -> None:
     assert exitcode == 0
 
 
+def test_apply_signature(ctx: Context) -> None:
+    """Test 'pylint-silent apply'."""
+    # Run pylint on test files.
+    pylint_output = ctx.temp_sample_filename + "lint"
+    ctx.run_pylint_to_file(pylint_output)
+
+    # Apply pylint-silent changed based on output from pylint.
+    run_pylint_silent("apply", "--signature", pylint_output)
+
+    # Test that the expected python file was generated.
+    assert filecmp.cmp(ctx.temp_sample_filename, ctx.sample_after_apply_w_sig), \
+        f"diff {ctx.temp_sample_filename} {ctx.sample_after_apply_w_sig}"
+
+    # Test that pylint is indeed silent now.
+    exitcode = ctx.run_pylint("--disable=duplicate-code")
+    assert exitcode == 0
+
+
 def test_stats(ctx: Context) -> None:
     """Test that 'pylint-silent stats' have not changed."""
-    sample_stats = ctx.temp_sample_filename + "_stats"
-    with redirect_stdout(open(sample_stats, "w", encoding="utf-8")):
+    sample_stats_1 = ctx.temp_sample_filename + "_stats_1"
+    with redirect_stdout(open(sample_stats_1, "w", encoding="utf-8")):
         run_pylint_silent("stats", ctx.sample_after_apply)
 
-    assert filecmp.cmp(sample_stats, ctx.sample_filename + "_stats"), \
-        f"diff {sample_stats} {ctx.sample_filename + '_stats'}"
+    assert filecmp.cmp(sample_stats_1, ctx.sample_filename + "_stats"), \
+        f"diff {sample_stats_1} {ctx.sample_filename + '_stats'}"
+
+    # Test same result when running with --signature on a "legacy" apply
+    sample_stats_2 = ctx.temp_sample_filename + "_stats_2"
+    with redirect_stdout(open(sample_stats_2, "w", encoding="utf-8")):
+        run_pylint_silent("stats", "--signature", ctx.sample_after_apply_w_sig)
+
+    assert filecmp.cmp(sample_stats_2, ctx.sample_filename + "_stats"), \
+        f"diff {sample_stats_2} {ctx.sample_filename + '_stats'}"
+
+    # Test result when running with --signature on stats and apply
+    sample_stats_3 = ctx.temp_sample_filename + "_stats_3"
+    with redirect_stdout(open(sample_stats_3, "w", encoding="utf-8")):
+        run_pylint_silent("stats", "--signature", ctx.sample_after_apply_mixed)
+
+    assert filecmp.cmp(sample_stats_3, ctx.sample_filename + "_mixed_stats"), \
+        f"diff {sample_stats_3} {ctx.sample_filename + '_mixed_stats'}"
 
 
 def test_reset(ctx: Context) -> None:
@@ -131,6 +179,12 @@ def test_reset(ctx: Context) -> None:
     assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
         f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
 
+    # Test resetting a file with signature.
+    run_pylint_silent("reset", "--signature", ctx.temp_sample_after_apply_w_sig)
+
+    assert filecmp.cmp(ctx.temp_sample_after_apply_w_sig, ctx.sample_filename), \
+        f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
+
 
 def test_reset_sample2(ctx: Context) -> None:
     """Test 'pylint-silent reset' of the second sample file.
@@ -141,3 +195,9 @@ def test_reset_sample2(ctx: Context) -> None:
 
     assert filecmp.cmp(ctx.sample2_after_reset, ctx.temp_sample2_filename), \
         f"diff {ctx.sample2_after_reset} {ctx.temp_sample2_filename}"
+
+    # Test resetting a file without signatures but with --signature (should fail)
+    run_pylint_silent("reset", "--signature", ctx.temp_sample2_again_filename)
+    assert (
+        filecmp.cmp(ctx.sample2_after_reset, ctx.temp_sample2_again_filename) is False
+    )

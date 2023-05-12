@@ -1,0 +1,6 @@
+broad-exception-caught: 1
+eval-used: 1
+missing-function-docstring: 1
+unused-argument: 1
+unused-variable: 1
+TOTAL: 5
