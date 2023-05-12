@@ -109,3 +109,41 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 `pylint-silent` helps `pylint` live up to its motto.
 
+### Changelog
+
+#### 1.3 (2023-05-12)
+
+* Mark every pylint-silent comment with a signature. Fixes #4. PR #5.
+* Add a --max-line-length option. Fixes #3.
+* Fix tests for pylint 2.16. Require pylint >= 2.16 for the tests.
+
+#### 1.2 (2022-12-23)
+
+* Preserve comments meant for other non-pylint tools. PR #2.
+
+#### 1.1.2 (2022-11-30)
+
+* Use pyproject.toml instead of setup.py.
+* Update compatible python versions to currently supported python 3.7 through 3.11.
+* Fix bug in `pylint-silent stats` that got confused with `=` symbols in code.
+* Document in README.md how to reset or get statistics on all files in folder.
+
+#### 1.1.1 (2021-04-13)
+
+* Preserve file permissions in generated code. Fixes #1.
+
+#### 1.1 (2021-03-04)
+
+* Ignore disable/enable blocks.
+* Add reference to pylint-ignore in the README.
+* Add testing based on pytest and tox.
+* Handle missing-module-docstring correctly.
+
+#### 1.0.1 (2020-07-22)
+
+* Fix link from pypi.org to github.
+* Fix markdown in README.md.
+
+#### 1.0 (2020-07-20)
+
+* Initial release.
