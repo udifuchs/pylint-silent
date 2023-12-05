@@ -115,10 +115,10 @@ def apply(pylint_logfile: str, signature: str, max_line_length: int) -> None:
             code = line_parts[3]
             message = line_parts[4]
 
-            if code in (
+            if code in {
                     " R0401",  # Cyclic import
                     " R0801",  # Similar lines in 2 files
-            ):
+            }:
                 # Pylint reports the wrong file and line number for these messages.
                 continue
             if code == " C0326":
@@ -167,12 +167,12 @@ def reset(py_filename: str, signature: str) -> None:
          open(out_filename, "w", encoding="utf-8") as out_file:
 
         for line in py_file:
-            if line.rstrip() in (
+            if line.rstrip() in {
                 f"# pylint: disable=missing-module-docstring{signature}",
                 f"# pylint: disable=too-many-lines{signature}",
                 "# pylint: disable=invalid-name; silent invalid module name",
                 "# pylint: enable=invalid-name; silent",
-            ):
+            }:
                 something_changed = True
                 continue
             if "# pylint: disable-next=" in line:
@@ -193,9 +193,9 @@ def reset(py_filename: str, signature: str) -> None:
 
                 # Other tooling comments may follow pylint comments
                 # Make sure to add *back* that comment before proceeding
-                other_comment_pos = line.find('#', comment_pos + 1)
+                other_comment_pos = line.find("#", comment_pos + 1)
                 if other_comment_pos > 0:
-                    stripped_line += '  ' + line[other_comment_pos:].rstrip()
+                    stripped_line += "  " + line[other_comment_pos:].rstrip()
                 line = stripped_line + EOL
                 something_changed = True
             out_file.write(line)
@@ -224,16 +224,16 @@ def statistics(py_filenames: List[str], signature: str) -> None:
                 if (
                     comment_pos > 0
                     or line.lstrip().startswith("# pylint: disable-next=")
-                    or line.rstrip() in (
+                    or line.rstrip() in {
                         f"# pylint: disable=missing-module-docstring{signature}",
                         f"# pylint: disable=too-many-lines{signature}",
                         "# pylint: disable=invalid-name; silent invalid module name",
-                    )
+                    }
                 ):
                     comment = line.lstrip()[comment_pos:].rstrip()
 
                     # Other tooling comments may follow pylint comments
-                    other_comment_pos = comment.find('#', 1)
+                    other_comment_pos = comment.find("#", 1)
                     if other_comment_pos > 0:
                         comment = comment[:other_comment_pos].rstrip()
 
@@ -241,7 +241,7 @@ def statistics(py_filenames: List[str], signature: str) -> None:
                         comment = comment[:comment.find("; silent")]
                     # 'comment' may disable several messages:
                     # "# pylint: disable=too-many-branches,too-many-statements"
-                    messages = comment[comment.rfind("=") + 1:].split(';')[0].split(",")
+                    messages = comment[comment.rfind("=") + 1:].split(";")[0].split(",")
                     for message in messages:
                         if message in stats:
                             stats[message] += 1

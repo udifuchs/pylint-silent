@@ -38,7 +38,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    signature = SIGNATURE if args.signature else ''
+    signature = SIGNATURE if args.signature else ""
     if args.command == "apply":
         pylint_logfile = args.filename[0]
         pylint_silent.apply(pylint_logfile, signature, args.max_line_length)
