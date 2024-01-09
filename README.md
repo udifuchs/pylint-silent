@@ -34,7 +34,7 @@ def func(name):  # pylint: disable=unused-argument
 
 If adding the comment would make the line too long, `pylint-silent` would instead add:
 ```
-# pylint-next: disable=unused-argument
+# pylint: disable-next=unused-argument
 def very-long-function-name-with-some-arguments(first_argument, second_argument):
 ```
 `--max-line-length` specfies the maximum line length.
