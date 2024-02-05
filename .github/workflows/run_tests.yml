@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         # Run on earliest and latest supported python versions.
-        python-version: ["3.7", "3.11"]
+        python-version: ["3.8", "3.12"]
         # Run linters and pytests.
         testsuite: ["linters", "pytest"]
     steps:
@@ -25,7 +25,7 @@ jobs:
           pip install tox
       - name: run linters
         # Linters are only run on the earliest supported python version.
-        if: ${{ matrix.python-version == '3.7' && matrix.testsuite == 'linters' }}
+        if: ${{ matrix.python-version == '3.8' && matrix.testsuite == 'linters' }}
         run: tox -e py3-pytest
       - name: run pytest
         if: ${{ matrix.testsuite == 'pytest' }}

@@ -111,6 +111,10 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 ### Changelog
 
+#### 1.3 (2024-??-??)
+
+* Update compatible python versions to currently supported python 3.8 through 3.12.
+
 #### 1.3 (2023-05-12)
 
 * Mark every pylint-silent comment with a signature. Fixes #4. PR #5.
