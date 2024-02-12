@@ -111,7 +111,7 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 ### Changelog
 
-#### 1.3 (2024-??-??)
+#### 1.4 (2024-02-11)
 
 * Update compatible python versions to currently supported python 3.8 through 3.12.
 
