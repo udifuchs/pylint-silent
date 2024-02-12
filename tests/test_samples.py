@@ -64,9 +64,8 @@ class Context:
 
     def run_pylint(self, *args: str) -> Optional[int]:
         """Run pylint on our python test files."""
-        pylint_opts = ((self.temp_sample_filename,
-                        self.temp_sample_after_apply) + args,)
-        proc = multiprocessing.Process(target=pylint.lint.Run, args=pylint_opts)
+        pylint_opts = (self.temp_sample_filename, self.temp_sample_after_apply, *args)
+        proc = multiprocessing.Process(target=pylint.lint.Run, args=(pylint_opts,))
         proc.start()
         proc.join()
         return proc.exitcode
