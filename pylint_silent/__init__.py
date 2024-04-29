@@ -3,7 +3,7 @@ import os
 import shutil
 from typing import Dict, List, Set
 
-VERSION = "1.4"
+VERSION = "1.4.1"
 
 EPILOG = """
 Commands:

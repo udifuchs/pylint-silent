@@ -111,6 +111,10 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 ### Changelog
 
+#### 1.4.1 (2024-04-28)
+
+* Preserve file permissions also during reset. Fixes #6.
+
 #### 1.4 (2024-02-11)
 
 * Update compatible python versions to currently supported python 3.8 through 3.12.
