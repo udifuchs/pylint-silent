@@ -77,6 +77,14 @@ class Context:
             return self.run_pylint("--max-module-lines=10")
 
 
+def assert_files_equal(file_1: str, file_2: str) -> None:
+    """Check that both file are the same and have the same permissions."""
+    assert filecmp.cmp(file_1, file_2), f"diff {file_1} {file_2}"
+    f1_mode = os.stat(file_1).st_mode
+    f2_mode = os.stat(file_2).st_mode
+    assert f1_mode == f2_mode, f"diff mode {file_1}({f1_mode:o}) {file_2}({f2_mode:o})"
+
+
 @pytest.fixture(name="ctx")
 def fixture_ctx(tmpdir: str) -> Context:
     """Create context fixture for running tests."""
@@ -111,8 +119,7 @@ def test_apply(ctx: Context) -> None:
     run_pylint_silent("apply", "--max-line-length=70", pylint_output)
 
     # Test that the expected python file was generated.
-    assert filecmp.cmp(ctx.temp_sample_filename, ctx.sample_after_apply), \
-        f"diff {ctx.temp_sample_filename} {ctx.sample_after_apply}"
+    assert_files_equal(ctx.temp_sample_filename, ctx.sample_after_apply)
 
     # Test that pylint is indeed silent now.
     exitcode = ctx.run_pylint("--disable=duplicate-code")
@@ -129,8 +136,7 @@ def test_apply_signature(ctx: Context) -> None:
     run_pylint_silent("apply", "--signature", pylint_output)
 
     # Test that the expected python file was generated.
-    assert filecmp.cmp(ctx.temp_sample_filename, ctx.sample_after_apply_w_sig), \
-        f"diff {ctx.temp_sample_filename} {ctx.sample_after_apply_w_sig}"
+    assert_files_equal(ctx.temp_sample_filename, ctx.sample_after_apply_w_sig)
 
     # Test that pylint is indeed silent now.
     exitcode = ctx.run_pylint("--disable=duplicate-code")
@@ -176,20 +182,17 @@ def test_reset(ctx: Context) -> None:
     """
     run_pylint_silent("reset", ctx.temp_sample_after_apply)
 
-    assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
-        f"diff {ctx.temp_sample_after_apply} {ctx.sample_filename}"
+    assert_files_equal(ctx.temp_sample_after_apply, ctx.sample_filename)
 
     # Test resetting a clean file.
     run_pylint_silent("reset", ctx.temp_sample_after_apply)
 
-    assert filecmp.cmp(ctx.temp_sample_after_apply, ctx.sample_filename), \
-        f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
+    assert_files_equal(ctx.temp_sample_after_apply, ctx.sample_filename)
 
     # Test resetting a file with signature.
     run_pylint_silent("reset", "--signature", ctx.temp_sample_after_apply_w_sig)
 
-    assert filecmp.cmp(ctx.temp_sample_after_apply_w_sig, ctx.sample_filename), \
-        f"diff {ctx.temp_sample_filename} {ctx.sample_filename}"
+    assert_files_equal(ctx.temp_sample_after_apply_w_sig, ctx.sample_filename)
 
 
 def test_reset_sample2(ctx: Context) -> None:
@@ -199,8 +202,7 @@ def test_reset_sample2(ctx: Context) -> None:
     """
     run_pylint_silent("reset", ctx.temp_sample2_filename)
 
-    assert filecmp.cmp(ctx.sample2_after_reset, ctx.temp_sample2_filename), \
-        f"diff {ctx.sample2_after_reset} {ctx.temp_sample2_filename}"
+    assert_files_equal(ctx.sample2_after_reset, ctx.temp_sample2_filename)
 
     # Test resetting a file without signatures but with --signature (should fail)
     run_pylint_silent("reset", "--signature", ctx.temp_sample2_again_filename)

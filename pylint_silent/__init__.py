@@ -201,6 +201,7 @@ def reset(py_filename: str, signature: str) -> None:
             out_file.write(line)
 
     if something_changed:
+        shutil.copymode(py_filename, out_filename)
         os.rename(out_filename, py_filename)
     else:
         os.remove(out_filename)
