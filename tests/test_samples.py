@@ -1,14 +1,16 @@
 """Test pylint-silent workflow."""
-import os
-import shutil
+
 import filecmp
 import multiprocessing
-from contextlib import redirect_stdout
-import unittest.mock
+import os
 import runpy
+import shutil
+import unittest.mock
+from contextlib import redirect_stdout
 from typing import Optional, Union
-import pytest
+
 import pylint.lint
+import pytest
 
 
 def run_pylint_silent(*args: str) -> Union[int, str, None]:
@@ -24,7 +26,10 @@ def run_pylint_silent(*args: str) -> Union[int, str, None]:
 # pylint: disable-next=too-few-public-methods,too-many-instance-attributes; silent
 class Context:
     """Create context for running tests.
-    This includes a temporary folder and pointers to all related file names."""
+
+    This includes a temporary folder and pointers to all related file names.
+    """
+
     def __init__(self, tmpdir: str) -> None:
         self.sample_filename = "tests/sAmple_1.py"
         self.sample_after_apply = "tests/sAmple_1_after_apply.py"
@@ -92,7 +97,7 @@ def fixture_ctx(tmpdir: str) -> Context:
 
 
 def test_version_option() -> None:
-    """Test --version option"""
+    """Test --version option."""
     status = run_pylint_silent("--version")
     assert status == 0
 
@@ -178,6 +183,7 @@ def test_stats(ctx: Context) -> None:
 
 def test_reset(ctx: Context) -> None:
     """Test 'pylint-silent reset'.
+
     Remove all generated comments and test that we are back to the original code.
     """
     run_pylint_silent("reset", ctx.temp_sample_after_apply)

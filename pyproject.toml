@@ -43,29 +43,29 @@ packages = ["pylint_silent"]
 version = {attr = "pylint_silent.VERSION"}
 
 [tool.mypy]
-enable_error_code = "ignore-without-code"
 strict = true
 
 [tool.ruff.lint]
-select = [
-    "F",  # pyflakes
-    "E",  # pycodestyle
-    "W",  # pycodestyle
-    "N",  # pep8-naming
-    "UP",  # pyupgrade
-    "B",  # flake-bugbear
-    "G",  # flake8-logging-format
-    "PIE",  # flake-pie
-    "PT",  # flake8-pytest-style
-    "Q",  # flake8-quotes
-    "RET",  # flake8-return
-    "SIM",  # flake8-simplify
-    "PL",  # pylint
-    "RUF",  # ruff
-]
+select = ["ALL"]
 
 ignore = [
-    "UP015",  # Unnecessary open mode parameters
+    "COM812",  # Trailing comma missing
+    "D107",  # Missing docstring in `__init__`
+    "ERA001",  # Found commented-out code
+    "FA100",  # Add `from __future__ import annotations` to simplify `typing.Dict`
     "PLR2004",  # Magic value used in comparison, consider replacing {value} with a constant variable
     "PLW2901",  # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
+    "PTH1",  # `open()` should be replaced by `Path.open()`
+    "T201",  # `print` found
+    "UP015",  # Unnecessary open mode parameters
+]
+
+pydocstyle.convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_samples.py" = [
+    "S101",  # Use of `assert` detected
+]
+"pylint_silent/__init__.py" = [
+    "C901"  # `apply` is too complex (11 > 10)
 ]

@@ -1,6 +1,8 @@
 """Main entry point for pylint-silent."""
-import sys
+
 import argparse
+import sys
+
 import pylint_silent
 
 SIGNATURE = "; silent"
