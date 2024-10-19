@@ -20,7 +20,7 @@ def run_pylint_silent(*args: str) -> Union[int, str, None]:
             runpy.run_module("pylint_silent", run_name="__main__")
         except SystemExit as ex:
             return ex.code
-        return None
+        raise RuntimeError  # pragma: no cover # pylint_silent alway raises SystemExit
 
 
 # pylint: disable-next=too-few-public-methods,too-many-instance-attributes; silent
@@ -129,6 +129,17 @@ def test_apply(ctx: Context) -> None:
     # Test that pylint is indeed silent now.
     exitcode = ctx.run_pylint("--disable=duplicate-code")
     assert exitcode == 0
+
+
+def test_apply_empty(ctx: Context) -> None:
+    """Test 'pylint-silent apply' with empty file."""
+    pylint_output = ctx.temp_sample_filename + "lint-empty"
+    # Create empty file:
+    with open(pylint_output, "w", encoding="utf-8"):
+        pass
+
+    # Apply pylint-silent changed based on empty file:
+    run_pylint_silent("apply", pylint_output)
 
 
 def test_apply_signature(ctx: Context) -> None:
