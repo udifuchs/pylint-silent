@@ -39,6 +39,7 @@ pylint-silent = "pylint_silent.__main__:main"
 
 [tool.setuptools]
 packages = ["pylint_silent"]
+license-files = ["LICENSE"]
 
 [tool.setuptools.dynamic]
 version = {attr = "pylint_silent.VERSION"}
