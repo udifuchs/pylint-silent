@@ -113,7 +113,7 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 #### 1.4.2 (2024-??-??)
 
-* Update compatible python versions to python 3.8 through 3.14.
+* Update compatible python versions to python 3.9 through 3.14.
 
 #### 1.4.1 (2024-04-28)
 

@@ -2,7 +2,6 @@
 
 import os
 import shutil
-from typing import Dict, List, Set
 
 VERSION = "1.4.1"
 
@@ -26,7 +25,7 @@ TEMP_FILE_ENDING = ".created_by_pylint_silent"
 
 def pyfile_add_comments(  # pylint: disable=too-many-locals; silent
     py_filename: str,
-    messages: Dict[int, Set[str]],
+    messages: dict[int, set[str]],
     signature: str,
     max_line_length: int,
 ) -> None:
@@ -97,7 +96,7 @@ def pyfile_add_comments(  # pylint: disable=too-many-locals; silent
 def apply(pylint_logfile: str, signature: str, max_line_length: int) -> None:
     """Process the output of pylint add disable comments for all messages."""
     active_py_filename = None
-    messages: Dict[int, Set[str]] = {}
+    messages: dict[int, set[str]] = {}
 
     with open(pylint_logfile, "r", encoding="utf-8") as logfile:
 
@@ -208,9 +207,9 @@ def reset(py_filename: str, signature: str) -> None:
         os.remove(out_filename)
 
 
-def statistics(py_filenames: List[str], signature: str) -> None:
+def statistics(py_filenames: list[str], signature: str) -> None:
     """Show statistics on pylint comments from a list of python files."""
-    stats: Dict[str, int] = {}
+    stats: dict[str, int] = {}
 
     for py_filename in py_filenames:
 
