@@ -111,7 +111,7 @@ Whichever option you choose, I recommend reading their documentation about how `
 
 ### Changelog
 
-#### 1.4.2 (2024-??-??)
+#### 1.4.2 (2025-10-07)
 
 * Update compatible python versions to python 3.9 through 3.14.
 
