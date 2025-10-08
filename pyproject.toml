@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 60", "wheel"]
+requires = ["setuptools >= 77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,12 +9,12 @@ authors = [
     {name = "Udi Fuchs", email = "udifuchs@gmail.com"},
 ]
 requires-python = ">=3.9"
-license = {text = "GPL-2.0-or-later"}
+license = "GPL-2.0-or-later"
+license-files = ["LICENSE"]
 classifiers = [
     "Topic :: Software Development :: Quality Assurance",
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
-    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -39,7 +39,6 @@ pylint-silent = "pylint_silent.__main__:main"
 
 [tool.setuptools]
 packages = ["pylint_silent"]
-license-files = ["LICENSE"]
 
 [tool.setuptools.dynamic]
 version = {attr = "pylint_silent.VERSION"}
