@@ -70,7 +70,9 @@ class Context:
     def run_pylint(self, *args: str) -> Optional[int]:
         """Run pylint on our python test files."""
         pylint_opts = (self.temp_sample_filename, self.temp_sample_after_apply, *args)
-        proc = multiprocessing.Process(target=pylint.lint.Run, args=(pylint_opts,))
+        # The "forkserver" start methods is not compatible with redirect_stdout:
+        ctx = multiprocessing.get_context("fork")
+        proc = ctx.Process(target=pylint.lint.Run, args=(pylint_opts,))
         proc.start()
         proc.join()
         return proc.exitcode
